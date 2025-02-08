@@ -1,0 +1,32 @@
+    // Fetch messages and quick reactions from NAFIJ.json when page loads
+    window.onload = function () {
+      fetch('/loadMessages')
+        .then(response => response.json())
+        .then(data => {
+          data.messages.forEach(msg => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${msg.user}:</strong> ${msg.text}`;
+            messagesDiv.appendChild(messageElement);
+          });
+
+          data.files.forEach(fileData => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${fileData.user}:</strong> <a href="${fileData.fileUrl}" target="_blank">${fileData.fileName}</a>`;
+            messagesDiv.appendChild(messageElement);
+          });
+
+          data.reactions.forEach(reactionData => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${reactionData.user}:</strong> ${reactionData.reaction}`;
+            messagesDiv.appendChild(messageElement);
+          });
+
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        })
+        .catch(error => console.error('Error loading messages:', error));
+    };
+
+
